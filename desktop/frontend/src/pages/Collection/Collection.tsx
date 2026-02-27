@@ -1,10 +1,10 @@
-import { FC } from "react"
-import "./Collection.scss"
-import Sentence from "../../components/models/Sentence"
+import { FC } from 'react';
+import './Collection.scss';
+import Sentence from '../../components/models/Sentence';
 
 const Collection: FC = () => {
 	// get rows data
-	const sentences: Sentence[] = []
+	const sentences: Sentence[] = [];
 	const Rows = sentences.map((sentence, index) => (
 		<tr>
 			<td>
@@ -20,13 +20,13 @@ const Collection: FC = () => {
 			<td>{sentence.target}</td>
 			<td>{sentence.target_meaning}</td>
 		</tr>
-	))
+	));
 
 	return (
 		<div id="Collection" className="page">
 			<div id="container">
 				<div className="top">
-					<select defaultValue={"sentences"}>
+					<select defaultValue={'sentences'}>
 						<option value="sentences">Sentences</option>
 						<option value="words">Words</option>
 					</select>
@@ -51,7 +51,7 @@ const Collection: FC = () => {
 				</table>
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default Collection
+export default Collection;

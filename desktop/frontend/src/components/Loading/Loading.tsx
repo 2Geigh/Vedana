@@ -1,9 +1,9 @@
-import { FC } from "react"
-import "./Loading.scss"
+import { FC } from 'react';
+import './Loading.scss';
 
 type LoadingProps = {
-	text: string
-}
+	text: string;
+};
 const Loading: FC<LoadingProps> = ({ text }) => {
 	return (
 		<div id="Loading">
@@ -14,7 +14,7 @@ const Loading: FC<LoadingProps> = ({ text }) => {
 			/>
 			<span>{text}</span>
 		</div>
-	)
-}
+	);
+};
 
-export default Loading
+export default Loading;

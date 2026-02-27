@@ -1,6 +1,6 @@
-import { FC } from "react"
-import { Link } from "react-router-dom"
-import "./Navbar.scss"
+import { FC } from 'react';
+import { Link } from 'react-router-dom';
+import './Navbar.scss';
 
 const Navbar: FC = () => {
 	return (
@@ -10,20 +10,20 @@ const Navbar: FC = () => {
 			</Link>
 			<ul>
 				<li>
-					<Link to={"/home"}>Add</Link>
+					<Link to={'/home'}>Add</Link>
 				</li>
 				<li>
-					<Link to={"/collection"}>Browse</Link>
+					<Link to={'/collection'}>Browse</Link>
 				</li>
 				<li>
-					<Link to={"/stats"}>Stats</Link>
+					<Link to={'/stats'}>Stats</Link>
 				</li>
 				<li>
-					<Link to={"/settings"}>Settings</Link>
+					<Link to={'/settings'}>Settings</Link>
 				</li>
 			</ul>
 		</nav>
-	)
-}
+	);
+};
 
-export default Navbar
+export default Navbar;

@@ -1,4 +1,4 @@
-@use "../../styles/App.scss";
+@use '../../styles/App.scss';
 
 #Navbar {
 	display: flex;
@@ -60,7 +60,7 @@
 				border-radius: 0.33em;
 				overflow: hidden;
 
-				font-family: "Inter", sans-serif;
+				font-family: 'Inter', sans-serif;
 				line-height: 1.5em;
 
 				color: black;

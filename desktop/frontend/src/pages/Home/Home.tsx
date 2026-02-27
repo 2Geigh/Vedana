@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom"
-import MainInput from "../../components/MainInput/MainInput"
-import "./Home.scss"
+import { Link } from 'react-router-dom';
+import MainInput from '../../components/MainInput/MainInput';
+import './Home.scss';
 
 const Home = () => {
 	return (
@@ -9,7 +9,7 @@ const Home = () => {
 				<MainInput />
 			</div>
 		</div>
-	)
-}
+	);
+};
 
-export default Home
+export default Home;
