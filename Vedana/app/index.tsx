@@ -1,3 +1,4 @@
+import Loading from '@/src/components/Loading';
 import { Link, useNavigation } from 'expo-router';
 import { useState } from 'react';
 import { Text, View, StyleSheet, TextInput, Button } from 'react-native';
@@ -78,7 +79,7 @@ export default function Index() {
 				></TextInput>
 			</View>
 
-			{searchQuery.trim() !== '' && <>Loading...</>}
+			{searchQuery.trim() !== '' && <Loading message='Loading' />}
 		</View>
 	);
 }
