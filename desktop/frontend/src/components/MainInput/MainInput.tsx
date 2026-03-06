@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { ChangeEvent, FC, JSX, useEffect, useState } from 'react';
 import './MainInput.scss';
 import '../../styles/App.scss';
@@ -7,6 +8,80 @@ import { RandomHaiku } from '../../util/placeholder';
 
 const MAX_SENTENCE_LENGTH: number = 500;
 const MAX_MEANING_LENGTH: number = 500;
+=======
+import React, { ChangeEvent, FC, JSX, useEffect, useState } from "react"
+import "./MainInput.scss"
+import "../../styles/App.scss"
+import Loading from "../Loading/Loading"
+import { ParseSentence } from "../../util/language"
+import { RandomHaiku } from "../../util/placeholder"
+
+const MAX_SENTENCE_LENGTH: number = 500
+const MAX_WORD_LENGTH: number = 64
+const MAX_MEANING_LENGTH: number = 500
+>>>>>>> Stashed changes
+
+type WordSelectionProps = {
+	parsedWords: string[] | undefined
+	setTargetWord: React.Dispatch<React.SetStateAction<string | undefined>>
+}
+const WordSelection: FC<WordSelectionProps> = ({
+	parsedWords,
+	setTargetWord,
+}) => {
+	const [usingCustomWord, setUsingCustomWord] = useState<boolean>(false)
+
+	let words: JSX.Element[] = []
+	const name = "targetWord"
+	if (parsedWords) {
+		words = parsedWords!.map((word, index) => {
+			const id = `${index}-${word}`
+			return (
+				<li className="input_label">
+					<input type="radio" name={name} id={id} />
+					<label htmlFor={id}>{word}</label>
+				</li>
+			)
+		})
+	}
+
+	return (
+		<div className="section word_selection">
+			<span className="prompt select_a_target_word">
+				Select a target word:
+			</span>
+			<ul className="words">
+				{words}
+				<li className="input_label">
+					<input type="radio" name={name} id="custom" />
+					<input
+						maxLength={MAX_WORD_LENGTH}
+						placeholder="Custom"
+					></input>
+				</li>
+			</ul>
+		</div>
+	)
+}
+
+type MeaningProps = {
+	targetWord: string | undefined
+}
+const Meaning: FC<MeaningProps> = ({ targetWord }) => {
+	return (
+		<div className="section definition">
+			<span className="prompt write_your_comprehension_notes">
+				{targetWord ? `${targetWord}'s meaning` : `Meaning`}:
+			</span>
+			<textarea
+				name="meaning"
+				id="meaning"
+				placeholder={RandomHaiku()}
+				maxLength={MAX_MEANING_LENGTH}
+			></textarea>
+		</div>
+	)
+}
 
 const MainInput: FC = () => {
 	const [isParsing, setIsParsing] = useState<boolean>(false);
@@ -48,6 +123,7 @@ const MainInput: FC = () => {
 		console.log('#############################');
 	}, [isParsing, hasParsed, sentence, parsedWords, targetWord]);
 
+<<<<<<< Updated upstream
 	let words: JSX.Element[] = [];
 	if (parsedWords) {
 		words = parsedWords!.map((word, index) => (
@@ -69,6 +145,8 @@ const MainInput: FC = () => {
 		));
 	}
 
+=======
+>>>>>>> Stashed changes
 	return (
 		<div id="MainInput">
 			<input
@@ -103,6 +181,7 @@ const MainInput: FC = () => {
 				{hasParsed && (
 					<>
 						<div id="selection">
+<<<<<<< Updated upstream
 							<div className="section word_selection">
 								<span className="prompt select_a_target_word">
 									Select a target word:
@@ -123,6 +202,13 @@ const MainInput: FC = () => {
 									maxLength={MAX_MEANING_LENGTH}
 								></textarea>
 							</div>
+=======
+							<WordSelection
+								parsedWords={parsedWords}
+								setTargetWord={setTargetWord}
+							/>
+							<Meaning targetWord={targetWord} />
+>>>>>>> Stashed changes
 						</div>
 						<button className="create_note">Create note</button>
 					</>

@@ -1,0 +1,4 @@
+bin/KDict
+*.css
+*.css.map
+.env

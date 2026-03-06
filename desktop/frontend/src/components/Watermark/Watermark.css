@@ -1,0 +1,50 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  font-size: 1rem;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+body {
+  background-color: lightgray;
+  background-image: url("/backgrounds/blurs/sakura_blur.jpg");
+  background-size: cover;
+  background-position: 50% 50%;
+}
+body .page {
+  min-height: calc(100vh - 2.25em);
+}
+
+#Watermark {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  box-sizing: border-box;
+  border-top-right-radius: 0.5em;
+  font-family: "Inter", sans-serif;
+  font-weight: lighter;
+  font-size: 1rem;
+  transition: background-color 0.1s;
+  background-color: rgba(255, 255, 255, 0.75);
+}
+#Watermark a {
+  text-decoration: underline;
+  font-size: inherit;
+  font-family: inherit;
+  color: black;
+}
+#Watermark .year {
+  margin-left: 0.33em;
+  margin-top: 0.05em;
+  font-size: inherit;
+  font-family: inherit;
+}/*# sourceMappingURL=Watermark.css.map */

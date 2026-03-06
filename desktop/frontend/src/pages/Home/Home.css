@@ -1,0 +1,53 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  font-size: 1rem;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+body {
+  background-color: lightgray;
+  background-image: url("/backgrounds/blurs/sakura_blur.jpg");
+  background-size: cover;
+  background-position: 50% 50%;
+}
+body .page {
+  min-height: calc(100vh - 2.25em);
+}
+
+#Home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+#Home #container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 1.5em;
+  box-sizing: border-box;
+  border-radius: 1.5em;
+}
+#Home #container #viewCollection {
+  padding: 0.75em;
+  padding-left: 1em;
+  padding-right: 1em;
+  box-sizing: border-box;
+  margin-top: 1.5em;
+  border-radius: 0.66em;
+  font-size: inherit;
+  text-decoration: none;
+  background-color: #b7fff1;
+}
+#Home #container #viewCollection:hover,
+#Home #container #viewCollection:focus {
+  color: black;
+  background-color: #7bbaae;
+}
+#Home #container #viewCollection:active {
+  box-shadow: 0px 0px 1em 0px rgba(82, 82, 82, 0.5) inset;
+}/*# sourceMappingURL=Home.css.map */
