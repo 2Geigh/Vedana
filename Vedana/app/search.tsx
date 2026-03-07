@@ -1,12 +1,20 @@
-import { Text, View } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 
-type SearchScreenProps = { word: string };
-const SearchScreen: React.FC<SearchScreenProps> = ({ word }) => {
+export default function SearchScreen() {
+	const { word } = useLocalSearchParams<{ word: string }>();
+
 	return (
-		<View>
+		<View style={styles.container}>
 			<Text>Result of searching for {word} will go here</Text>
 		</View>
 	);
-};
+}
 
-export default SearchScreen;
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+});
