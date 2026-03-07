@@ -3,13 +3,28 @@ package handlers
 import (
 	"Vedana/dict"
 	"Vedana/nlp"
+	"Vedana/util"
 	"fmt"
 	"html/template"
 	"net/http"
+	"os"
 	"strings"
+
+	"github.com/joho/godotenv"
 )
 
-func Results(w http.ResponseWriter, req *http.Request, apiUrl string) {
+func Results(w http.ResponseWriter, req *http.Request) {
+	util.CrossOriginResourceSharing(w, "GET, OPTIONS")
+
+	// Create API query
+	godotenv.Load()
+	apiKey := os.Getenv("API_KEY")
+	apiUrlWithKey := util.API_URL_WITHOUT_KEY + apiKey
+
+	resultsLogic(w, req, apiUrlWithKey)
+}
+
+func resultsLogic(w http.ResponseWriter, req *http.Request, apiUrl string) {
 
 	var (
 		data = dict.TemplateData{}
