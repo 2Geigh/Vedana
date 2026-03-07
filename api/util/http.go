@@ -3,8 +3,8 @@ package util
 import "net/http"
 
 const (
-	CLIENT_ORIGIN       string = "http://localhost"
-	API_URL_WITHOUT_KEY        = "https://krdict.korean.go.kr/api/search?key="
+	CLIENT_ORIGIN       = "http://localhost:8081"
+	API_URL_WITHOUT_KEY = "https://krdict.korean.go.kr/api/search?key="
 )
 
 func CrossOriginResourceSharing(w http.ResponseWriter, options string) {

@@ -1,22 +1,24 @@
 import { useState } from 'react';
 import { Text, View, StyleSheet, TextInput, Pressable } from 'react-native';
-import { Link, router } from 'expo-router';
+import { Link } from 'expo-router';
 import Loading from '@/src/components/Loading';
 import { api_base_url } from '@/src/util/url';
+import { sleep } from '@/src/util/time';
 
 export default function Index() {
 	const [searchQuery, setSearchQuery] = useState<string>('');
 	const [isSearching, setIsSearching] = useState<boolean>(false);
 
-	const handleSearch = async () => {
-		// if (searchQuery.trim() !== '') {
-		// 	router.push({ pathname: '/search', params: { word: searchQuery } });
-		// }
+	async function handleSearch() {
+		if (searchQuery.trim() === '') {
+			return;
+		}
 
 		setIsSearching(true);
 
 		try {
 			const response = await fetch(`${api_base_url}/health`, { method: 'GET' });
+			await sleep(5000);
 
 			if (!response.ok) {
 				throw new Error(`${response.status}: ${response.text}`);
@@ -28,7 +30,7 @@ export default function Index() {
 		} finally {
 			setIsSearching(false);
 		}
-	};
+	}
 
 	return (
 		<View style={styles.body}>
