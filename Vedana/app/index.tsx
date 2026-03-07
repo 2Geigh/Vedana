@@ -1,13 +1,32 @@
 import { useState } from 'react';
 import { Text, View, StyleSheet, TextInput, Pressable } from 'react-native';
 import { Link, router } from 'expo-router';
+import Loading from '@/src/components/Loading';
+import { api_base_url } from '@/src/util/url';
 
 export default function Index() {
 	const [searchQuery, setSearchQuery] = useState<string>('');
+	const [isSearching, setIsSearching] = useState<boolean>(false);
 
-	const handleSearch = () => {
-		if (searchQuery.trim() !== '') {
-			router.push({ pathname: '/search', params: { word: searchQuery } });
+	const handleSearch = async () => {
+		// if (searchQuery.trim() !== '') {
+		// 	router.push({ pathname: '/search', params: { word: searchQuery } });
+		// }
+
+		setIsSearching(true);
+
+		try {
+			const response = await fetch(`${api_base_url}/health`, { method: 'GET' });
+
+			if (!response.ok) {
+				throw new Error(`${response.status}: ${response.text}`);
+			}
+
+			console.log(response);
+		} catch (error) {
+			throw new Error(`${error}`);
+		} finally {
+			setIsSearching(false);
 		}
 	};
 
@@ -34,6 +53,12 @@ export default function Index() {
 						<Text style={styles.searchButtonText}>검색</Text>
 					</Pressable>
 				</View>
+
+				{isSearching && (
+					<View>
+						<Loading message='Searching'></Loading>
+					</View>
+				)}
 			</View>
 		</View>
 	);
