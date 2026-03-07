@@ -12,7 +12,7 @@ services:
 
   web:
     build:
-      context: ./Vedana
+      context: ./client
       dockerfile: Dockerfile
     image: vedana-web:latest
     ports:
