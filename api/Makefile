@@ -15,4 +15,4 @@ mkrdir_bin: clean
 		mkdir -p bin
 
 build: mkrdir_bin
-		CGO_ENABLED=0 GOOS=linux go build -o ./bin/main.out main.go
+		CGO_ENABLED=0 go build -o ./bin/main.out main.go
