@@ -11,7 +11,8 @@ clean: vet
 		go clean ./...
 
 mkrdir_bin: clean
+		rm -rf ./bin
 		mkdir -p bin
 
 build: mkrdir_bin
-		go build -o ./bin
+		CGO_ENABLED=0 GOOS=linux go build -o ./bin/main.out main.go

@@ -1,4 +1,4 @@
-bin/KDict
+*/bin
 *.css
 *.css.map
 .env

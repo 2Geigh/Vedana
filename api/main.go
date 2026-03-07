@@ -198,26 +198,31 @@ func parseSentence(query string) ([]string, error) {
 }
 
 func main() {
+	var (
+		port = 3000
+	)
 
-	// Create API query
-	godotenv.Load()
-	apiKey := os.Getenv("API_KEY")
-	apiUrlWithKey := apiUrlWithoutKey + apiKey
+	fmt.Printf("Server starting on port %d...\n", port)
 
-	// Serve static files
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
-	// route "/"
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
-		http.ServeFile(w, req, "index.html")
+		http.ServeFile(w, req, "./templates/index.html")
 	})
 
-	// route "/results"
 	http.HandleFunc("/results", func(w http.ResponseWriter, req *http.Request) {
+		// Create API query
+		godotenv.Load()
+		apiKey := os.Getenv("API_KEY")
+		apiUrlWithKey := apiUrlWithoutKey + apiKey
+
 		resultsHandler(w, req, apiUrlWithKey)
 	})
 
-	// Start server
-	log.Fatal(http.ListenAndServe(":3000", nil))
+	http.HandleFunc("/health", func(w http.ResponseWriter, req *http.Request) {
+		w.Write([]byte("Connection healthy!\n"))
+	})
 
+	fmt.Printf("Server accessible at http://localhost:%d\n", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
 }

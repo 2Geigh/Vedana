@@ -1,4 +1,4 @@
-module KDict
+module Vedana
 
 go 1.25.2
 
