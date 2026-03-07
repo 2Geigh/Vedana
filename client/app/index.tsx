@@ -3,28 +3,42 @@ import { Text, View, StyleSheet, TextInput, Pressable } from 'react-native';
 import { Link } from 'expo-router';
 import Loading from '@/src/components/Loading';
 import { api_base_url } from '@/src/util/url';
-import { sleep } from '@/src/util/time';
+import { NoResults, Results } from '@/src/types/search';
+
+const isQueryValid = (query: string): boolean => {
+	const isValid = query.trim() !== '';
+	return isValid;
+};
 
 export default function Index() {
 	const [searchQuery, setSearchQuery] = useState<string>('');
 	const [isSearching, setIsSearching] = useState<boolean>(false);
+	const [noResults, setNoResults] = useState<boolean | undefined>(undefined);
 
 	async function handleSearch() {
-		if (searchQuery.trim() === '') {
+		if (!isQueryValid(searchQuery)) {
 			return;
 		}
 
 		setIsSearching(true);
+		setNoResults(undefined);
 
 		try {
-			const response = await fetch(`${api_base_url}/health`, { method: 'GET' });
-			await sleep(5000);
+			const response = await fetch(
+				`${api_base_url}/results?search_query=${searchQuery}`,
+				{
+					method: 'GET',
+				},
+			);
 
 			if (!response.ok) {
 				throw new Error(`${response.status}: ${response.text}`);
 			}
 
-			console.log(response);
+			const results = (await response.json()) as Results;
+			if (NoResults(results)) {
+				setNoResults(true);
+			}
 		} catch (error) {
 			throw new Error(`${error}`);
 		} finally {
@@ -59,6 +73,12 @@ export default function Index() {
 				{isSearching && (
 					<View>
 						<Loading message='Searching'></Loading>
+					</View>
+				)}
+
+				{noResults && (
+					<View>
+						<Text>결과가 없음.</Text>
 					</View>
 				)}
 			</View>

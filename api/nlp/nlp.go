@@ -37,7 +37,7 @@ func ParseSentence(query string) ([]string, error) {
 	pythonProgramPath := fmt.Sprintf("%s/nlp/%s", dir, filename)
 
 	// Create parseSentence.py terminal call
-	cmd := exec.Command("python", pythonProgramPath, query)
+	cmd := exec.Command("python3", pythonProgramPath, query)
 
 	// Capture the standard output
 	var (

@@ -8,32 +8,32 @@ import (
 	"net/url"
 )
 
-type TemplateData struct {
-	SearchQuery   string
-	SearchResults []Search
+type Results struct {
+	SearchQuery   string   `json:"search_query"`
+	SearchResults []Search `json:"search_results"`
 }
 
 type Search struct {
-	Title   string `xml:"title"`
-	Total   int    `xml:"total"`
-	Results []Item `xml:"item"`
+	Title   string `xml:"title" json:"title"`
+	Total   int    `xml:"total" json:"total"`
+	Results []Item `xml:"item" json:"results"`
 }
 
 type Item struct {
-	Target_code      int        `xml:"target_code"`
-	Word             string     `xml:"word"`
-	Sup_no           int        `xml:"sup_no"`
-	Etymology        string     `xml:"origin"`
-	Pronunciation    string     `xml:"pronunciation"`
-	Word_grade_level string     `xml:"word_grade"`
-	Word_type        string     `xml:"pos"`
-	Entry_link       string     `xml:"link"`
-	Sense            EntrySense `xml:"sense"`
+	Target_code      int        `xml:"target_code" json:"target_code"`
+	Word             string     `xml:"word" json:"word"`
+	Sup_no           int        `xml:"sup_no" json:"sup_no"`
+	Etymology        string     `xml:"origin" json:"etymology"`
+	Pronunciation    string     `xml:"pronunciation" json:"pronunciation"`
+	Word_grade_level string     `xml:"word_grade" json:"word_grade_level"`
+	Word_type        string     `xml:"pos" json:"word_type"`
+	Entry_link       string     `xml:"link" json:"entry_link"`
+	Sense            EntrySense `xml:"sense" json:"sense"`
 }
 
 type EntrySense struct {
-	Order      int    `xml:"sense_order"`
-	Definition string `xml:"definition"`
+	Order      int    `xml:"sense_order" json:"order"`
+	Definition string `xml:"definition" json:"definition"`
 }
 
 func FetchData(word string, urlWithApiKey string) (Search, error) {
