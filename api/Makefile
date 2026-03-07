@@ -16,6 +16,6 @@ mkdir_bin: clean
 	
 dependencies: mkdir_bin
 		pip install --upgrade pip
-		pip install konlpy
+		pip install konlpy openkorpos_dic
 build: dependencies
 		CGO_ENABLED=0 go build -o ./bin/main.out main.go

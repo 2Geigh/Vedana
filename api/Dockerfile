@@ -58,7 +58,10 @@ WORKDIR /app
 
 # Transfer compiled binary and static assets
 COPY --from=build /main.out ./main.out
-COPY src/ ./src/
+COPY /dict ./dict
+COPY /handlers ./handlers
+COPY /dict ./dict
+COPY /nlp ./nlp
 COPY static/ ./static/
 COPY templates/ ./templates/
 
