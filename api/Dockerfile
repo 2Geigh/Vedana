@@ -9,10 +9,11 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o /main.out main.go
 # Production stage
 FROM debian:stable-slim AS prod
 
-# Install Python, MeCab compilation tools, and dependencies
+# Install Java (JRE/JDK), Python, MeCab compilation tools, and build dependencies
 RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
+    default-jdk \
     curl \
     g++ \
     make \
@@ -21,8 +22,12 @@ RUN apt-get update && apt-get install -y \
     libtool \
     && rm -rf /var/lib/apt/lists/*
 
+# Set JAVA_HOME for JPype/Konlpy
+ENV JAVA_HOME=/usr/lib/jvm/default-java
+ENV PATH=$PATH:$JAVA_HOME/bin
+
 # Install Konlpy
-RUN pip3 install konlpy --break-system-packages
+RUN pip3 install konlpy openkorpos_dic --break-system-packages
 
 # Compile and install MeCab and MeCab Dictionary for ARM64/AMD64 compatibility
 RUN set -ex; \

@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	var (
-		port = 3000
+	const (
+		PORT = 3000
 	)
 
 	fmt.Println("Server starting...")
@@ -18,6 +18,6 @@ func main() {
 	http.HandleFunc("/health", handlers.Health)
 	http.HandleFunc("/results", handlers.Results)
 
-	fmt.Printf("Server accessible at http://localhost:%d\n", port)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
+	fmt.Printf("Server accessible at http://localhost:%d\n", PORT)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil))
 }

@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	CLIENT_ORIGIN       = "http://localhost:8081"
+	CLIENT_ORIGIN       = "http://localhost:8082"
 	API_URL_WITHOUT_KEY = "https://krdict.korean.go.kr/api/search?key="
 )
 
