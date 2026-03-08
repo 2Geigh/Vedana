@@ -56,13 +56,9 @@ const SearchResults: FC<SearchResultsProps> = ({
 					const href: RelativePathString = `./words/${item.target_code}`;
 					return (
 						<View style={styles.resultItem}>
-							<Link href={href}>
-								<Text style={styles.wordText}>
-									{item.word}{' '}
-									<Text style={{ fontWeight: 'normal', opacity: 0.5 }}>
-										({item.etymology})
-									</Text>
-								</Text>
+							<Link href={`./`} style={styles.resultItemHeader}>
+								<Text style={styles.wordText}>{item.word}</Text>
+								<Text style={styles.hanjaText}>{item.etymology}</Text>
 							</Link>
 							<Text style={styles.definitionText}>{item.sense.definition}</Text>
 						</View>
@@ -71,6 +67,8 @@ const SearchResults: FC<SearchResultsProps> = ({
 			/>
 		);
 	}
+
+	return <Text>문제가 있었음.</Text>;
 };
 
 export default function Index() {
@@ -221,8 +219,16 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 	},
 	resultList: {
+		display: 'flex',
+		flexGrow: 1,
+		flexDirection: 'column',
+		justifyContent: 'flex-start',
+		alignItems: 'stretch',
 		paddingVertical: 10,
 		paddingHorizontal: 10,
+		maxWidth: 550,
+		minWidth: 390,
+
 		// backgroundColor: 'red',
 	},
 	resultItem: {
@@ -233,13 +239,26 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.25,
 		shadowRadius: 5,
 		elevation: 5,
-		marginBottom: 20,
+		marginBottom: 25,
+		marginLeft: 5,
 		borderRadius: 5,
-		maxWidth: 550,
+	},
+	resultItemHeader: {
+		display: 'flex',
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		width: '100%',
+		alignItems: 'flex-start',
+		marginBottom: 10,
 	},
 	wordText: {
 		fontWeight: 'bold',
 		fontSize: 18,
+	},
+	hanjaText: {
+		fontWeight: 'normal',
+		fontSize: 18,
+		opacity: 0.5,
 	},
 	definitionText: {
 		fontSize: 14,
