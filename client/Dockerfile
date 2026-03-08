@@ -1,5 +1,5 @@
 # Build stage
-FROM node AS build
+FROM node:lts AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -7,7 +7,7 @@ COPY . .
 RUN npx expo export -p web
 
 # Production stage
-FROM nginx AS prod
+FROM nginx:alpine-slim AS prod
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # SPA Routing configuration

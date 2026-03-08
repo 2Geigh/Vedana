@@ -23,6 +23,8 @@ func main() {
 	if err != nil {
 		log.Fatal(fmt.Errorf("couldn't load environment variables: %w", err))
 	}
+	fmt.Printf("API_KEY: %s\n", handlers.API_KEY)
+	fmt.Printf("CLIENT_ORIGIN: %s\n", util.CLIENT_ORIGIN)
 
 	http.HandleFunc("/", handlers.Root)
 	http.HandleFunc("/health", handlers.Health)
