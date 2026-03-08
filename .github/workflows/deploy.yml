@@ -53,6 +53,14 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           envs: API_KEY
           script: |
+            # 1. Network Diagnostics
+            echo "--- Diagnostic: Testing Host DNS ---"
+            getent hosts google.com || echo "Host DNS Failed"
+
+            echo "--- Diagnostic: Testing Docker Container DNS ---"
+            docker run --rm alpine nslookup bbuseruploads.s3.amazonaws.com || echo "Container DNS Failed"
+
+            # 2. Repo Update
             if [ ! -d "$HOME/Vedana" ]; then
               git clone https://github.com/${{ github.repository }}.git "$HOME/Vedana"
             fi
@@ -60,10 +68,13 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
 
+            # 3. Environment Setup
             cat <<EOF > ./api/.env
             API_KEY=$API_KEY
             CLIENT_ORIGIN=http://localhost:8082
             EOF
 
-            docker compose down
-            docker compose up -d --build
+            # 4. Build with Network Host (Workaround for DNS issues)
+            echo "--- Starting Build ---"
+            docker compose build --no-cache --pull
+            docker compose up -d
