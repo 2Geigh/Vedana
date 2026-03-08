@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"slices"
 	"strings"
 )
 
@@ -46,8 +47,10 @@ func Results(w http.ResponseWriter, req *http.Request) {
 				return
 			}
 
-			// Send each parsed word to dictionary API
-			for _, word := range words {
+			// Send each unique parsed word to dictionary API
+			uniqueWords := uniqueWords(words)
+			fmt.Println(uniqueWords)
+			for _, word := range uniqueWords {
 				wordSearchData, err := dict.FetchData(word, apiUrlWithKey)
 				if err != nil {
 					util.LogHttpError(w, err, fmt.Sprintf("couldn't fetch dictionary data for '%s'", word), http.StatusInternalServerError)
@@ -80,4 +83,18 @@ func Results(w http.ResponseWriter, req *http.Request) {
 		}
 
 	}
+}
+
+func uniqueWords(words []string) []string {
+	var (
+		nonRedundantWords []string = []string{}
+	)
+
+	for _, word := range words {
+		if !slices.Contains(nonRedundantWords, word) {
+			nonRedundantWords = append(nonRedundantWords, word)
+		}
+	}
+
+	return nonRedundantWords
 }

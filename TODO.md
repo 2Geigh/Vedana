@@ -4,9 +4,7 @@
 
 ### Alpha
 
-- [] If two of the same word are parsed from a search query, remove the extra instances of the word before calling the dictionary API
+- [x] If two of the same word are parsed from a search query, remove the extra instances of the word before calling the dictionary API
+- [ ] Get all loading 汉字 animations
 
 #### Beta v1
-
-- [ ] Cloud sync to an API (similar to how Anki does it)
-- [ ] Read-only React Native app for mobile
