@@ -1,0 +1,60 @@
+name: Lint and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+          cache-dependency-path: api/go.sum
+
+      - name: Lint Go API
+        working-directory: ./api
+        run: |
+          go fmt ./...
+          go vet ./...
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install Client Dependencies
+        working-directory: ./client
+        run: npm ci
+
+      - name: Lint React Native Client
+        working-directory: ./client
+        run: npx eslint .
+
+  deploy:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute SSH Commands on VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_IP }}
+          username: deployHelper
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            if [ ! -d "$HOME/Vedana" ]; then
+              git clone https://github.com/${{ github.repository }}.git "$HOME/Vedana"
+            fi
+            cd "$HOME/Vedana"
+            git fetch origin main
+            git reset --hard origin/main
+            docker-compose down
+            docker-compose up -d --build
