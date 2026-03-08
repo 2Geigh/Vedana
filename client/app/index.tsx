@@ -22,11 +22,13 @@ type SearchResultsProps = {
 	results: Results[] | undefined;
 	isSearching: boolean;
 	noResults: boolean | undefined;
+	errorOccured: boolean | undefined;
 };
 const SearchResults: FC<SearchResultsProps> = ({
 	results,
 	isSearching,
 	noResults,
+	errorOccured,
 }) => {
 	if (isSearching) {
 		return (
@@ -68,7 +70,11 @@ const SearchResults: FC<SearchResultsProps> = ({
 		);
 	}
 
-	return <Text>문제가 있었음.</Text>;
+	if (errorOccured) {
+		return <Text>문제가 있었음.</Text>;
+	}
+
+	return null;
 };
 
 export default function Index() {
@@ -76,6 +82,9 @@ export default function Index() {
 	const [isSearching, setIsSearching] = useState<boolean>(false);
 	const [results, setResults] = useState<Results[] | undefined>(undefined);
 	const [noResults, setNoResults] = useState<boolean | undefined>(undefined);
+	const [errorOccured, setErrorOccured] = useState<boolean | undefined>(
+		undefined,
+	);
 
 	async function handleSearch() {
 		if (!isQueryValid(searchQuery)) {
@@ -85,6 +94,7 @@ export default function Index() {
 		setIsSearching(true);
 		setResults(undefined);
 		setNoResults(undefined);
+		setErrorOccured(undefined);
 
 		try {
 			const response = await fetch(
@@ -109,7 +119,9 @@ export default function Index() {
 				break;
 			}
 			setNoResults(noResults);
+			setErrorOccured(false);
 		} catch (error) {
+			setErrorOccured(true);
 			throw new Error(`${error}`);
 		} finally {
 			setIsSearching(false);
@@ -144,6 +156,7 @@ export default function Index() {
 					results={results}
 					isSearching={isSearching}
 					noResults={noResults}
+					errorOccured={errorOccured}
 				/>
 			</View>
 		</View>
