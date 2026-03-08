@@ -5,6 +5,9 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     image: vedana-api:latest
     ports:
       - '3002:3002'
