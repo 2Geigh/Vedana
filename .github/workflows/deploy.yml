@@ -76,5 +76,6 @@ jobs:
 
             # 4. Build with Network Host (Workaround for DNS issues)
             echo "--- Starting Build ---"
+            docker compose down --remove-orphans
             docker compose build --no-cache --pull
-            docker compose up -d
+            docker compose up -d --force-recreate
