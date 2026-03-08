@@ -8,3 +8,5 @@
 - [ ] Get all loading 汉字 animations
 
 #### Beta v1
+
+- [ ] Add change in sentence parsing algorithm based on query length
