@@ -71,7 +71,6 @@ func Results(w http.ResponseWriter, req *http.Request) {
 			util.LogHttpError(w, err, "couldn't marshall search result data to JSON", http.StatusInternalServerError)
 			return
 		}
-		fmt.Println(data)
 
 		w.Header().Set("Content-Type", "application/json")
 		statusCode, err := w.Write(resultsJson)

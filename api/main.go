@@ -16,18 +16,13 @@ func main() {
 
 	fmt.Println("Server starting...")
 
-	// Explicitly map keys to their target variables
 	err := util.LoadEnv(
 		util.EnvPair{Key: "API_KEY", Value: &handlers.API_KEY},
 		util.EnvPair{Key: "CLIENT_ORIGIN", Value: &util.CLIENT_ORIGIN},
 	)
-
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal(fmt.Errorf("couldn't load environment variables: %w", err))
 	}
-
-	fmt.Println("API_KEY:", handlers.API_KEY)
-	fmt.Println("CLIENT_ORIGIN:", util.CLIENT_ORIGIN)
 
 	http.HandleFunc("/", handlers.Root)
 	http.HandleFunc("/health", handlers.Health)
