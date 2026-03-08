@@ -1,9 +1,9 @@
-export type Results = {
+export type Search = {
 	search_query: string;
-	search_results: search[];
+	search_results: Results[];
 };
 
-type search = {
+export type Results = {
 	title: string;
 	total: number;
 	results: item[];
@@ -27,7 +27,14 @@ type entrySense = {
 };
 
 export const NoResults = (results: Results): boolean => {
-	return (
-		results.search_results.length <= 1 && results.search_results[0].total === 0
-	);
+	if (
+		results === null ||
+		results === undefined ||
+		results.results === null ||
+		results.results === undefined
+	) {
+		return true;
+	}
+
+	return results.results.length <= 1 && results.total === 0;
 };

@@ -1,18 +1,72 @@
-import { useState } from 'react';
-import { Text, View, StyleSheet, TextInput, Pressable } from 'react-native';
-import { Link } from 'expo-router';
+import { FC, JSX, useState } from 'react';
+import {
+	Text,
+	View,
+	StyleSheet,
+	TextInput,
+	Pressable,
+	Platform,
+} from 'react-native';
+import { Link, RelativePathString } from 'expo-router';
 import Loading from '@/src/components/Loading';
 import { api_base_url } from '@/src/util/url';
-import { NoResults, Results } from '@/src/types/search';
+import { Search, Results, NoResults } from '@/src/types/search';
 
 const isQueryValid = (query: string): boolean => {
 	const isValid = query.trim() !== '';
 	return isValid;
 };
 
+type SearchResultsProps = {
+	results: Results[] | undefined;
+	isSearching: boolean;
+	noResults: boolean | undefined;
+};
+const SearchResults: FC<SearchResultsProps> = ({
+	results,
+	isSearching,
+	noResults,
+}) => {
+	if (isSearching) {
+		return (
+			<View>
+				<Loading message='Searching'></Loading>
+			</View>
+		);
+	}
+
+	if (noResults) {
+		return (
+			<View>
+				<Text>결과가 없음.</Text>
+			</View>
+		);
+	}
+
+	if (results) {
+		let Results: JSX.Element[] = [];
+		for (let source of results) {
+			console.log(`source: ${source.title}`);
+			for (let entry of source.results) {
+				const href: RelativePathString = `./words/${entry.target_code}`;
+				const element = (
+					<li key={entry.entry_link} style={styles.resultItem}>
+						<Link href={href}>{entry.word}</Link>
+						<Text>{entry.sense.definition}</Text>
+					</li>
+				);
+				Results.push(element);
+			}
+		}
+
+		return <ul style={styles.resultList}>{Results}</ul>;
+	}
+};
+
 export default function Index() {
 	const [searchQuery, setSearchQuery] = useState<string>('');
 	const [isSearching, setIsSearching] = useState<boolean>(false);
+	const [results, setResults] = useState<Results[] | undefined>(undefined);
 	const [noResults, setNoResults] = useState<boolean | undefined>(undefined);
 
 	async function handleSearch() {
@@ -21,6 +75,7 @@ export default function Index() {
 		}
 
 		setIsSearching(true);
+		setResults(undefined);
 		setNoResults(undefined);
 
 		try {
@@ -35,10 +90,17 @@ export default function Index() {
 				throw new Error(`${response.status}: ${response.text}`);
 			}
 
-			const results = (await response.json()) as Results;
-			if (NoResults(results)) {
-				setNoResults(true);
+			const search = (await response.json()) as Search;
+			setResults(search.search_results);
+
+			let noResults = false;
+			for (let result of search.search_results) {
+				if (NoResults(result)) {
+					noResults = true;
+				}
+				break;
 			}
+			setNoResults(noResults);
 		} catch (error) {
 			throw new Error(`${error}`);
 		} finally {
@@ -70,17 +132,11 @@ export default function Index() {
 					</Pressable>
 				</View>
 
-				{isSearching && (
-					<View>
-						<Loading message='Searching'></Loading>
-					</View>
-				)}
-
-				{noResults && (
-					<View>
-						<Text>결과가 없음.</Text>
-					</View>
-				)}
+				<SearchResults
+					results={results}
+					isSearching={isSearching}
+					noResults={noResults}
+				/>
 			</View>
 		</View>
 	);
@@ -153,5 +209,26 @@ const styles = StyleSheet.create({
 	searchButtonText: {
 		color: 'black',
 		fontSize: 14,
+	},
+	resultList: {},
+	resultItem: {
+		padding: 10,
+		backgroundColor: 'white',
+		// Mobile Shadow (iOS)
+		shadowColor: 'black',
+		shadowOffset: { width: 0, height: 0 },
+		shadowOpacity: 0.25,
+		shadowRadius: 5,
+		// Mobile Shadow (Android)
+		elevation: 5,
+
+		marginBottom: 20,
+		borderRadius: 5,
+
+		...(Platform.OS === 'web'
+			? {
+					boxShadow: '0px 0px .33em .1em rgba(0, 0, 0, 0.25)',
+				}
+			: {}),
 	},
 });
