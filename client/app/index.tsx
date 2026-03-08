@@ -6,6 +6,7 @@ import {
 	TextInput,
 	Pressable,
 	Platform,
+	FlatList,
 } from 'react-native';
 import { Link, RelativePathString } from 'expo-router';
 import Loading from '@/src/components/Loading';
@@ -44,22 +45,31 @@ const SearchResults: FC<SearchResultsProps> = ({
 	}
 
 	if (results) {
-		let Results: JSX.Element[] = [];
-		for (let source of results) {
-			console.log(`source: ${source.title}`);
-			for (let entry of source.results) {
-				const href: RelativePathString = `./words/${entry.target_code}`;
-				const element = (
-					<li key={entry.entry_link} style={styles.resultItem}>
-						<Link href={href}>{entry.word}</Link>
-						<Text>{entry.sense.definition}</Text>
-					</li>
-				);
-				Results.push(element);
-			}
-		}
+		const flattenedData = results.flatMap((source) => source.results);
 
-		return <ul style={styles.resultList}>{Results}</ul>;
+		return (
+			<FlatList
+				data={flattenedData}
+				keyExtractor={(item) => item.entry_link}
+				contentContainerStyle={styles.resultList}
+				renderItem={({ item }) => {
+					const href: RelativePathString = `./words/${item.target_code}`;
+					return (
+						<View style={styles.resultItem}>
+							<Link href={href}>
+								<Text style={styles.wordText}>
+									{item.word}{' '}
+									<Text style={{ fontWeight: 'normal', opacity: 0.5 }}>
+										({item.etymology})
+									</Text>
+								</Text>
+							</Link>
+							<Text style={styles.definitionText}>{item.sense.definition}</Text>
+						</View>
+					);
+				}}
+			/>
+		);
 	}
 };
 
@@ -210,25 +220,29 @@ const styles = StyleSheet.create({
 		color: 'black',
 		fontSize: 14,
 	},
-	resultList: {},
+	resultList: {
+		paddingVertical: 10,
+		paddingHorizontal: 10,
+		// backgroundColor: 'red',
+	},
 	resultItem: {
 		padding: 10,
 		backgroundColor: 'white',
-		// Mobile Shadow (iOS)
 		shadowColor: 'black',
 		shadowOffset: { width: 0, height: 0 },
 		shadowOpacity: 0.25,
 		shadowRadius: 5,
-		// Mobile Shadow (Android)
 		elevation: 5,
-
 		marginBottom: 20,
 		borderRadius: 5,
-
-		...(Platform.OS === 'web'
-			? {
-					boxShadow: '0px 0px .33em .1em rgba(0, 0, 0, 0.25)',
-				}
-			: {}),
+		maxWidth: 550,
+	},
+	wordText: {
+		fontWeight: 'bold',
+		fontSize: 18,
+	},
+	definitionText: {
+		fontSize: 14,
+		color: '#333',
 	},
 });
