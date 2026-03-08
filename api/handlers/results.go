@@ -7,10 +7,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
+)
 
-	"github.com/joho/godotenv"
+var (
+	API_KEY string
 )
 
 func Results(w http.ResponseWriter, req *http.Request) {
@@ -24,11 +25,10 @@ func Results(w http.ResponseWriter, req *http.Request) {
 
 	case http.MethodGet:
 		// Create dictionary API query
-		godotenv.Load()
 		var (
 			query         string       = req.URL.Query().Get("search_query")
 			data          dict.Results = dict.Results{SearchQuery: query}
-			apiKey        string       = os.Getenv("API_KEY")
+			apiKey        string       = API_KEY
 			apiUrlWithKey string       = util.API_URL_WITHOUT_KEY + apiKey
 		)
 

@@ -5,8 +5,11 @@ import (
 	"net/http"
 )
 
+var (
+	CLIENT_ORIGIN string
+)
+
 const (
-	CLIENT_ORIGIN       = "http://localhost:8082"
 	API_URL_WITHOUT_KEY = "https://krdict.korean.go.kr/api/search?key="
 )
 

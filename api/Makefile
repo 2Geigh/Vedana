@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := build
 
-.PHONY:fmt vet clean mkdir_bin dependencies build
+.PHONY:fmt vet clean mkdir_bin dependencies build run
 fmt:
 		go fmt ./...
 
@@ -21,3 +21,6 @@ dependencies: mkdir_bin
 		
 build: dependencies
 		CGO_ENABLED=0 go build -o ./bin/main.out main.go
+
+run: build
+	./bin/main.out
