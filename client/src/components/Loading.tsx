@@ -1,16 +1,24 @@
 import { Image, Text, View } from 'react-native';
-import { useState, useEffect, FC } from 'react';
+import { useState, useEffect } from 'react';
+import durations from '../../assets/images/stroke-order/fast/durations.json';
 
 const context = require.context(
 	'../../assets/images/stroke-order/fast',
 	false,
 	/\.gif$/,
 );
-const fastGifs = context.keys().map((key) => context(key));
-const GIF_DURATION_MS = 1500;
+
+const fastGifs = context.keys().map((key) => {
+	const fileName = key.replace('./', '');
+	return {
+		source: context(key),
+		duration: (durations as Record<string, number>)[fileName] || 1500,
+	};
+});
 
 type LoadingProps = { message: string };
-const Loading: FC<LoadingProps> = ({ message }) => {
+
+const Loading: React.FC<LoadingProps> = ({ message }) => {
 	const Message = `${message}...`;
 	const Style = { image: { dimension: 50 } };
 
@@ -21,17 +29,23 @@ const Loading: FC<LoadingProps> = ({ message }) => {
 	useEffect(() => {
 		if (fastGifs.length <= 1) return;
 
-		const interval = setInterval(() => {
+		let timeoutId: number;
+
+		const cycleGif = () => {
 			setGifIndex((prevIndex) => {
 				let nextIndex;
 				do {
 					nextIndex = Math.floor(Math.random() * fastGifs.length);
 				} while (nextIndex === prevIndex);
+
+				timeoutId = setTimeout(cycleGif, fastGifs[nextIndex].duration);
 				return nextIndex;
 			});
-		}, GIF_DURATION_MS);
+		};
 
-		return () => clearInterval(interval);
+		timeoutId = setTimeout(cycleGif, fastGifs[gifIndex].duration);
+
+		return () => clearTimeout(timeoutId);
 	}, []);
 
 	return (
@@ -47,16 +61,17 @@ const Loading: FC<LoadingProps> = ({ message }) => {
 			}}
 		>
 			<Image
-				key={gifIndex} // Forces re-render to ensure animation restart if caching causes issues
-				source={fastGifs[gifIndex]}
-				alt={Message}
+				key={gifIndex}
+				source={fastGifs[gifIndex].source}
+				accessibilityLabel={Message}
 				style={{
 					height: Style.image.dimension,
 					width: Style.image.dimension,
-					objectFit: 'contain',
+					resizeMode: 'contain',
+					marginBottom: 10,
 				}}
 			/>
-			<Text style={{ fontWeight: 'light' }}>{Message}</Text>
+			<Text style={{ fontWeight: '300' }}>{Message}</Text>
 		</View>
 	);
 };
