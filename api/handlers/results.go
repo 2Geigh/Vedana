@@ -6,9 +6,11 @@ import (
 	"Vedana/util"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"slices"
 	"strings"
+	"sync"
 )
 
 var (
@@ -34,11 +36,13 @@ func Results(w http.ResponseWriter, req *http.Request) {
 		)
 
 		if strings.TrimSpace(data.SearchQuery) == "" {
+			log.Println("Blank request recieved (possible Javascript injection attempt)")
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
 		data.SearchQuery = nlp.RemoveEmojis(data.SearchQuery)
+		// data.SearchQuery = nlp.RemovePunctuation(data.SearchQuery)
 
 		if strings.Contains(data.SearchQuery, " ") {
 			words, err := nlp.ParseSentence(data.SearchQuery)
@@ -49,16 +53,20 @@ func Results(w http.ResponseWriter, req *http.Request) {
 
 			// Send each unique parsed word to dictionary API
 			uniqueWords := uniqueWords(words)
-			fmt.Println(uniqueWords)
-			for _, word := range uniqueWords {
-				wordSearchData, err := dict.FetchData(word, apiUrlWithKey)
-				if err != nil {
-					util.LogHttpError(w, err, fmt.Sprintf("couldn't fetch dictionary data for '%s'", word), http.StatusInternalServerError)
-					return
-				}
+			log.Printf("Querying the following words:\n%v", uniqueWords)
 
-				data.SearchResults = append(data.SearchResults, wordSearchData)
+			var wg sync.WaitGroup
+			for _, word := range uniqueWords {
+				wg.Go(func() {
+					wordSearchData, err := dict.FetchData(word, apiUrlWithKey)
+					if err != nil {
+						util.LogHttpError(w, err, fmt.Sprintf("couldn't fetch dictionary data for '%s'", word), http.StatusInternalServerError)
+						return
+					}
+					data.SearchResults = append(data.SearchResults, wordSearchData)
+				})
 			}
+			wg.Wait()
 		} else {
 			wordSearchData, err := dict.FetchData(data.SearchQuery, apiUrlWithKey)
 			if err != nil {
