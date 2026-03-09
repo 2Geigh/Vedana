@@ -1,34 +1,32 @@
 #!/bin/bash
 
-# --- 1. Configuration ---
-SPEED=0.125            # 0.125 = 800% speed
-CONTRAST=1.5           # 1.5 = 50% increase
-COLORKEY_SIM=0.9       # Similarity for white transparency
-PAUSE_DURATION=0.0     # Seconds to pause on the last frame
-TARGET_FPS=30          # Ensures predictable timing and pause length
+SPEED=0.225
+CONTRAST=1.5
+COLORKEY_SIM=0.9
+PAUSE_DURATION=0.0
+TARGET_FPS=30
 OUTPUT_DIR="./fast"
+JSON_FILE="${OUTPUT_DIR}/durations.json"
 
 mkdir -p "$OUTPUT_DIR"
+echo "{" > "$JSON_FILE"
 
-# --- 2. Filter Component Construction ---
-# Normalize visuals first
 VISUALS="format=gray,eq=contrast=${CONTRAST},colorkey=white:${COLORKEY_SIM}:0"
-
-# Timing: Force a constant frame rate before reordering
-# This makes the "0.5s pause" math exact.
 TIMING="fps=${TARGET_FPS},setpts=${SPEED}*PTS"
 
-# Pause Logic: Only add the filter if duration > 0
 PAUSE_FILTER=""
 if (( $(echo "$PAUSE_DURATION > 0" | bc -l) )); then
     PAUSE_FILTER=",tpad=stop_mode=clone:stop_duration=${PAUSE_DURATION}"
 fi
 
-# --- 3. Execution ---
-for f in *.gif; do
-    echo "Processing: $f..."
+files=(*.gif)
+total=${#files[@]}
 
-    ffmpeg -v error -i "$f" -filter_complex \
+for (( i=0; i<$total; i++ )); do
+    f="${files[$i]}"
+    out="fast_${f}"
+
+    ffmpeg -y -v error -i "$f" -filter_complex \
         "[0:v]${VISUALS},${TIMING}[v]; \
          [v]split=2[main][first]; \
          [first]select='eq(n,0)'[f0]; \
@@ -37,7 +35,16 @@ for f in *.gif; do
          [final]split[inner_a][inner_b]; \
          [inner_a]palettegen=reserve_transparent=1[p]; \
          [inner_b][p]paletteuse" \
-        "${OUTPUT_DIR}/fast_${f}"
+        "${OUTPUT_DIR}/${out}"
+
+    dur_sec=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "${OUTPUT_DIR}/${out}")
+    dur_ms=$(echo "$dur_sec * 1000 / 1" | bc)
+
+    if [ $i -eq $((total - 1)) ]; then
+        echo "  \"${out}\": ${dur_ms}" >> "$JSON_FILE"
+    else
+        echo "  \"${out}\": ${dur_ms}," >> "$JSON_FILE"
+    fi
 done
 
-echo "Done. Outputs located in $OUTPUT_DIR"
+echo "}" >> "$JSON_FILE"
