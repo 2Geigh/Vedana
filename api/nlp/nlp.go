@@ -28,7 +28,7 @@ func ParseSentence(query string) ([]string, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Could not get working directory: %v\n", err)
 	}
-	fmt.Println("Current working directory:", dir)
+	// fmt.Println("Current working directory:", dir)
 
 	filename := "parseSentence.py"
 	pythonProgramPath := fmt.Sprintf("%s/nlp/%s", dir, filename)

@@ -1,11 +1,10 @@
-import { FC, JSX, useState } from 'react';
+import { FC, useState } from 'react';
 import {
 	Text,
 	View,
 	StyleSheet,
 	TextInput,
 	Pressable,
-	Platform,
 	FlatList,
 } from 'react-native';
 import { Link, RelativePathString } from 'expo-router';
@@ -52,10 +51,20 @@ const SearchResults: FC<SearchResultsProps> = ({
 		return (
 			<FlatList
 				data={flattenedData}
-				keyExtractor={(item) => item.entry_link}
+				keyExtractor={(item) => {
+					if (!item) {
+						return '.';
+					}
+
+					return item.entry_link;
+				}}
 				contentContainerStyle={styles.resultList}
 				renderItem={({ item }) => {
 					const href: RelativePathString = `./words/${item.target_code}`;
+
+					if (!item) {
+						return <></>;
+					}
 					return (
 						<View style={styles.resultItem}>
 							<Link href={`./`} style={styles.resultItemHeader}>

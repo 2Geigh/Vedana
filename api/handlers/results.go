@@ -53,7 +53,7 @@ func Results(w http.ResponseWriter, req *http.Request) {
 
 			// Send each unique parsed word to dictionary API
 			uniqueWords := uniqueWords(words)
-			log.Printf("Querying the following words:\n%v", uniqueWords)
+			log.Printf("Querying: %v", uniqueWords)
 
 			var wg sync.WaitGroup
 			for _, word := range uniqueWords {
