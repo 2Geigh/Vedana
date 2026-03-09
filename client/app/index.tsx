@@ -105,18 +105,23 @@ export default function Index() {
 			);
 
 			if (!response.ok) {
-				throw new Error(`${response.status}: ${response.text}`);
+				console.error(`${response.status}: ${response.statusText}`);
+				setErrorOccured(true);
+				return;
 			}
 
 			const search = (await response.json()) as Search;
 			setResults(search.search_results);
 
 			let noResults = false;
-			for (let result of search.search_results) {
-				if (NoResults(result)) {
-					noResults = true;
+			console.log(search);
+			if (search.search_results) {
+				for (let result of search.search_results) {
+					if (NoResults(result)) {
+						noResults = true;
+					}
+					break;
 				}
-				break;
 			}
 			setNoResults(noResults);
 			setErrorOccured(false);
