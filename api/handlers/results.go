@@ -41,15 +41,15 @@ func Results(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		data.SearchQuery = nlp.RemoveEmojis(data.SearchQuery)
-		// data.SearchQuery = nlp.RemovePunctuation(data.SearchQuery)
-
+		data.SearchQuery = nlp.RemoveNonAlphaNumHangulCJK(data.SearchQuery)
+		fmt.Println(data.SearchQuery)
 		if strings.Contains(data.SearchQuery, " ") {
 			words, err := nlp.ParseSentence(data.SearchQuery)
 			if err != nil {
 				util.LogHttpError(w, err, fmt.Sprintf("couldn't parse search query '%s'", data.SearchQuery), http.StatusInternalServerError)
 				return
 			}
+			fmt.Println(words)
 
 			// Send each unique parsed word to dictionary API
 			uniqueWords := uniqueWords(words)
