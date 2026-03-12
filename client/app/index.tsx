@@ -205,6 +205,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		width: '100%',
+		height: '100%',
 		backgroundColor: '#ffffff',
 	},
 	main: {
@@ -213,6 +214,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		width: '100%',
+		height: '100%',
 		paddingTop: 32,
 	},
 	titleSubtitleContainer: {
@@ -257,13 +259,14 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 
+		marginLeft: 8,
+
 		paddingHorizontal: 16,
 
 		borderWidth: 1,
 		borderColor: 'gray',
 		borderRadius: 4,
-		paddingHorizontal: 16,
-		marginLeft: 8,
+
 		backgroundColor: '#f1f5f9',
 	},
 	searchButtonText: {
@@ -272,40 +275,60 @@ const styles = StyleSheet.create({
 	},
 	resultList: {
 		display: 'flex',
-		flexGrow: 1,
 		flexDirection: 'column',
-		justifyContent: 'flex-start',
+		justifyContent: 'center',
 		alignItems: 'stretch',
+		flexWrap: 'wrap',
+
+		minWidth: 390,
+		width: '90%',
+		maxWidth: 550,
+
 		paddingVertical: 10,
 		paddingHorizontal: 10,
-		maxWidth: 550,
-		minWidth: 390,
+
+		boxSizing: 'border-box',
 
 		// backgroundColor: 'red',
 	},
 	resultItem: {
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'space-between',
+		alignItems: 'stretch',
+
+		minWidth: 200,
+		maxWidth: 350,
+
+		marginBottom: 25,
+		marginLeft: 5,
+
 		padding: 10,
-		backgroundColor: 'white',
+
+		borderRadius: 5,
 		shadowColor: 'black',
 		shadowOffset: { width: 0, height: 0 },
 		shadowOpacity: 0.25,
 		shadowRadius: 5,
+
 		elevation: 5,
-		marginBottom: 25,
-		marginLeft: 5,
-		borderRadius: 5,
+
+		backgroundColor: 'white',
 	},
 	resultItemHeader: {
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		width: '100%',
 		alignItems: 'flex-start',
+
+		width: '100%',
+
 		marginBottom: 10,
 	},
 	wordText: {
 		fontWeight: 'bold',
 		fontSize: 18,
+		marginRight: 20,
 	},
 	hanjaText: {
 		fontWeight: 'normal',
