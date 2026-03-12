@@ -253,8 +253,12 @@ const styles = StyleSheet.create({
 		color: 'black',
 	},
 	searchButton: {
+		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
+
+		paddingHorizontal: 16,
+
 		borderWidth: 1,
 		borderColor: 'gray',
 		borderRadius: 4,
