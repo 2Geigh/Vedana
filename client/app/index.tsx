@@ -21,13 +21,13 @@ type SearchResultsProps = {
 	results: Results[] | undefined;
 	isSearching: boolean;
 	noResults: boolean | undefined;
-	errorOccured: boolean | undefined;
+	error: string | null | undefined;
 };
 const SearchResults: FC<SearchResultsProps> = ({
 	results,
 	isSearching,
 	noResults,
-	errorOccured,
+	error,
 }) => {
 	if (isSearching) {
 		return (
@@ -79,8 +79,23 @@ const SearchResults: FC<SearchResultsProps> = ({
 		);
 	}
 
-	if (errorOccured) {
-		return <Text>문제가 있었음.</Text>;
+	if (error) {
+		return (
+			<Text
+				style={{
+					color: 'black',
+					backgroundColor: 'red',
+					padding: 5,
+					paddingLeft: 10,
+					paddingRight: 10,
+					wordWrap: 'wrap',
+					borderRadius: 10,
+					textAlign: 'center',
+				}}
+			>
+				<Text style={{ fontWeight: 'bold' }}>오류</Text>: {error}
+			</Text>
+		);
 	}
 
 	return null;
@@ -91,9 +106,7 @@ export default function Index() {
 	const [isSearching, setIsSearching] = useState<boolean>(false);
 	const [results, setResults] = useState<Results[] | undefined>(undefined);
 	const [noResults, setNoResults] = useState<boolean | undefined>(undefined);
-	const [errorOccured, setErrorOccured] = useState<boolean | undefined>(
-		undefined,
-	);
+	const [error, setError] = useState<string | null | undefined>(undefined);
 
 	async function handleSearch() {
 		if (!isQueryValid(searchQuery)) {
@@ -103,7 +116,7 @@ export default function Index() {
 		setIsSearching(true);
 		setResults(undefined);
 		setNoResults(undefined);
-		setErrorOccured(undefined);
+		setError(undefined);
 
 		try {
 			const response = await fetch(
@@ -114,8 +127,9 @@ export default function Index() {
 			);
 
 			if (!response.ok) {
-				console.error(`${response.status}: ${response.statusText}`);
-				setErrorOccured(true);
+				const errorText = await response.text();
+				console.error(`${response.status}: ${errorText}`);
+				setError(`${response.status}: ${errorText}`);
 				return;
 			}
 
@@ -133,10 +147,17 @@ export default function Index() {
 				}
 			}
 			setNoResults(noResults);
-			setErrorOccured(false);
-		} catch (error) {
-			setErrorOccured(true);
-			throw new Error(`${error}`);
+			setError(null);
+		} catch (error: unknown) {
+			let errorMessage = '모른 오류가 발생했습니다.';
+
+			if (error instanceof Error) {
+				setError(`${error as Error}`);
+			} else {
+				errorMessage = String(error);
+			}
+			setError(errorMessage);
+			console.error(`${error}`);
 		} finally {
 			setIsSearching(false);
 		}
@@ -170,7 +191,7 @@ export default function Index() {
 					results={results}
 					isSearching={isSearching}
 					noResults={noResults}
-					errorOccured={errorOccured}
+					error={error}
 				/>
 			</View>
 		</View>

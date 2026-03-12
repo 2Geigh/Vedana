@@ -19,6 +19,6 @@ func CrossOriginResourceSharing(w http.ResponseWriter, options string) {
 }
 
 func LogHttpError(w http.ResponseWriter, err error, errorMessage string, statusCode int) {
-	http.Error(w, errorMessage, statusCode)
 	log.Printf("%s: %v", errorMessage, err)
+	http.Error(w, errorMessage, statusCode)
 }
